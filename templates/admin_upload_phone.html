@@ -1,0 +1,11 @@
+{% extends 'base.html' %}
+{% block content %}
+  <h1 class="text-2xl font-semibold">Upload Phone</h1>
+  <form method="post" enctype="multipart/form-data" class="mt-4 max-w-md space-y-3">
+    <input name="name" placeholder="Device name" class="w-full border p-2 rounded" required>
+    <input name="price" placeholder="Price (numbers)" class="w-full border p-2 rounded" required>
+    <textarea name="description" placeholder="Description" class="w-full border p-2 rounded"></textarea>
+    <input type="file" name="image" accept="image/*" class="w-full">
+    <button class="px-4 py-2 bg-green-600 text-white rounded">Upload</button>
+  </form>
+{% endblock %}

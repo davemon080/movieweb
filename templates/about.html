@@ -1,0 +1,46 @@
+{% extends 'base.html' %}
+{% block content %}
+<div class="grid lg:grid-cols-3 gap-8">
+  <div class="lg:col-span-2">
+    <h2 class="text-2xl font-semibold mb-2">About / Portfolio</h2>
+    {% if about and about.content %}
+      <div class="prose prose-invert max-w-none text-slate-200">{{ about.content|safe }}</div>
+    {% else %}
+      <p class="muted">No about content yet — use the admin to populate your story and CV.</p>
+    {% endif %}
+
+    <h3 class="mt-8 font-semibold">Portfolio snapshots</h3>
+    <div class="mt-4 grid sm:grid-cols-2 gap-4">
+      <!-- show thumbnails from designs & phones -->
+      {% for p in phones[:4] %}
+      <div class="card p-2 flex items-center gap-3">
+        <div class="h-20 w-28 rounded bg-cover" style="background-image:url('/static/uploads/{{ p.image }}')"></div>
+        <div>
+          <div class="font-medium">{{ p.name }}</div>
+          <div class="muted text-sm">₦{{ '{:,.0f}'.format(p.price) }}</div>
+        </div>
+      </div>
+      {% endfor %}
+      {% for d in designs[:2] %}
+      <div class="card p-2 flex items-center gap-3">
+        <div class="h-20 w-28 rounded bg-cover" style="background-image:url('/static/uploads/{{ d.image }}')"></div>
+        <div>
+          <div class="font-medium">{{ d.title }}</div>
+          <div class="muted text-sm">{% if d.is_free %}Free{% else %}₦{{ '{:,.0f}'.format(d.price) }}{% endif %}</div>
+        </div>
+      </div>
+      {% endfor %}
+    </div>
+  </div>
+
+  <aside class="card p-4">
+    <div class="font-semibold">Contact & CV</div>
+    <div class="mt-3 muted text-sm">Email: you@domain.com</div>
+    {% if about and about.cv_file %}
+      <a class="mt-4 inline-block px-4 py-2 rounded bg-navy-800 text-accent" href="/static/uploads/{{ about.cv_file }}" download>Download CV</a>
+    {% else %}
+      <div class="mt-4 muted text-sm">Upload a CV from admin.</div>
+    {% endif %}
+  </aside>
+</div>
+{% endblock %}

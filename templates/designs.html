@@ -1,0 +1,32 @@
+{% extends 'base.html' %}
+{% block content %}
+<h2 class="text-2xl font-semibold mb-4">Graphic Designs</h2>
+
+<div class="grid sm:grid-cols-2 lg:grid-cols-3 gap-6">
+  {% for d in designs %}
+  <div class="card p-3">
+    <div class="rounded-lg overflow-hidden" style="height:180px;">
+      {% if d.image %}
+        <img src="{{ d.image if d.image.startswith('http') else '/static/uploads/' + d.image }}" alt="{{ d.title }}" class="w-full h-full object-cover" loading="lazy">
+      {% else %}
+        <div class="bg-navy-800 h-full flex items-center justify-center muted">No preview</div>
+      {% endif %}
+    </div>
+
+    <div class="mt-3 flex items-center justify-between">
+      <div>
+        <div class="font-semibold">{{ d.title }}</div>
+        <div class="muted text-sm">{% if d.is_free %}<span class="text-accent font-semibold">Free</span>{% else %}₦{{ '{:,.0f}'.format(d.price) }}{% endif %}</div>
+      </div>
+      <div>
+        {% if d.is_free and d.file %}
+          <a class="px-3 py-1 rounded border" href="{{ d.file if d.file.startswith('http') else '/static/uploads/' + d.file }}" download>Download</a>
+        {% else %}
+          <a class="px-3 py-1 rounded bg-navy-800 text-accent" href="#">Request</a>
+        {% endif %}
+      </div>
+    </div>
+  </div>
+  {% endfor %}
+</div>
+{% endblock %}

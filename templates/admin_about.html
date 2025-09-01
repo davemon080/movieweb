@@ -1,0 +1,10 @@
+{% extends 'base.html' %}
+{% block content %}
+  <h1 class="text-2xl font-semibold">Edit About / Upload CV</h1>
+  <form method="post" enctype="multipart/form-data" class="mt-4 max-w-2xl space-y-3">
+    <textarea name="content" rows="8" class="w-full border p-3">{{ about.content if about else '' }}</textarea>
+    <label>Upload CV (PDF)</label>
+    <input type="file" name="cv" accept="application/pdf" class="w-full">
+    <button class="px-4 py-2 bg-green-600 text-white rounded">Save</button>
+  </form>
+{% endblock %}

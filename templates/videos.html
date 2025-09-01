@@ -1,0 +1,72 @@
+{% extends 'base.html' %}
+{% block content %}
+<h2 class="text-2xl font-semibold mb-4">Work Videos</h2>
+
+<div class="grid sm:grid-cols-2 lg:grid-cols-3 gap-6">
+  {% for v in videos %}
+  <div class="card p-3">
+    <div class="rounded-lg overflow-hidden" style="height:160px;">
+      {% if v.poster %}
+        <img src="{{ v.poster if v.poster.startswith('http') else '/static/uploads/' + v.poster }}" alt="{{ v.title }}" class="w-full h-full object-cover" loading="lazy">
+      {% else %}
+        {% if v.filename and v.filename.startswith('http') %}
+          <!-- if remote S3 and no poster, show first frame is not possible server-side; show placeholder -->
+          <div class="h-full w-full bg-navy-800 flex items-center justify-center muted">Video</div>
+        {% else %}
+          <div class="h-full w-full bg-navy-800 flex items-center justify-center muted">Video</div>
+        {% endif %}
+      {% endif %}
+    </div>
+
+    <div class="mt-3 flex items-start justify-between">
+      <div>
+        <div class="font-semibold">{{ v.title }}</div>
+        <div class="muted text-sm">Uploaded: {{ v.created_at.split('T')[0] if v.created_at }}</div>
+      </div>
+      <div>
+        <button class="px-3 py-1 rounded border play-btn" data-src="{{ v.filename if v.filename.startswith('http') else '/static/uploads/' + v.filename }}" data-poster="{{ v.poster }}" data-title="{{ v.title }}">Play</button>
+      </div>
+    </div>
+  </div>
+  {% endfor %}
+</div>
+
+<!-- Modal player (same as index) -->
+<div id="videoModal" class="fixed inset-0 hidden items-center justify-center z-50 bg-black/70 p-4">
+  <div class="max-w-4xl w-full bg-navy-900 rounded-lg overflow-hidden">
+    <div class="flex items-center justify-between p-3 border-b border-white/5">
+      <div id="vTitle" class="font-semibold"></div>
+      <button id="closePlayer" class="px-3 py-1 rounded border">Close</button>
+    </div>
+    <div class="p-4 bg-black">
+      <video id="player" controls playsinline class="w-full h-[480px] bg-black"></video>
+    </div>
+  </div>
+</div>
+
+<script>
+  document.querySelectorAll('.play-btn').forEach(btn=>{
+    btn.addEventListener('click', ()=>{
+      const src = btn.getAttribute('data-src');
+      const poster = btn.getAttribute('data-poster');
+      const title = btn.getAttribute('data-title') || '';
+      const modal = document.getElementById('videoModal');
+      const player = document.getElementById('player');
+      document.getElementById('vTitle').textContent = title;
+      player.src = src;
+      if(poster){
+        player.setAttribute('poster', poster.startsWith('http') ? poster : (poster.startsWith('/') ? poster : '/static/uploads/'+poster));
+      } else { player.removeAttribute('poster'); }
+      modal.classList.remove('hidden'); modal.classList.add('flex');
+      player.play().catch(()=>{});
+    });
+  });
+  document.getElementById('closePlayer')?.addEventListener('click', ()=>{
+    const modal = document.getElementById('videoModal');
+    const player = document.getElementById('player');
+    player.pause(); player.src = '';
+    modal.classList.remove('flex'); modal.classList.add('hidden');
+  });
+  document.getElementById('videoModal')?.addEventListener('click', (e)=>{ if(e.target.id==='videoModal') document.getElementById('closePlayer').click(); });
+</script>
+{% endblock %}
