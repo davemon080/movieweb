@@ -1,35 +1,88 @@
 
-export interface Video {
+export type UserRole = 'Admin' | 'Seller';
+
+export interface Seller {
   id: string;
-  title: string;
-  description: string;
-  url: string;
-  duration: string;
-  order: number;
+  email: string;
+  password: string;
+  name: string;
+  branchId: string; 
 }
 
-export interface Course {
+export interface Product {
   id: string;
-  title: string;
-  description: string;
-  thumbnail: string;
-  author: string;
-  category: string;
-  price: number; // 0 for free
-  rating: number;
-  enrolledCount: number;
-  videos: Video[];
+  sku: string;
+  name: string;
+  price: number;
+  costPrice: number;
+  quantity: number;
+  minThreshold: number;
+  expiryDate?: string;
+  lastUpdated: string;
+  tags?: string[];
+}
+
+export interface TransactionItem {
+  productId: string;
+  name: string;
+  sku: string;
+  quantity: number;
+  price: number;
+  costPriceAtSale: number;
+}
+
+export interface Transaction {
+  id: string;
+  items: TransactionItem[];
+  total: number;
+  totalCost: number;
+  type: 'SALE' | 'RESTOCK';
+  timestamp: string;
+}
+
+export interface Branch {
+  id: string;
+  name: string;
+  location: string;
+  products: Product[];
+  transactions: Transaction[];
   createdAt: string;
 }
 
-export interface User {
-  id: string;
-  name: string;
-  email: string;
-  avatar: string;
-  role: 'student' | 'instructor';
-  enrolledCourses: string[]; // Course IDs
-  ownedCourses: string[]; // Course IDs for instructors
+export interface AppConfig {
+  supermarketName: string;
+  logoUrl: string;
+  adminPassword: string;
+  sellers: Seller[];
+  branches: Branch[];
 }
 
-export type View = 'home' | 'dashboard' | 'watch' | 'search';
+export interface InventoryStats {
+  totalItems: number;
+  totalValue: number;
+  totalCostValue: number;
+  lowStockCount: number;
+  outOfStockCount: number;
+}
+
+export interface Notification {
+  id: string;
+  message: string;
+  type: 'info' | 'alert' | 'success';
+  timestamp: string;
+  read: boolean;
+  user: string;
+}
+
+export type ApprovalActionType = 'ADD' | 'EDIT' | 'DELETE';
+
+export interface ApprovalRequest {
+  id: string;
+  branchId: string;
+  actionType: ApprovalActionType;
+  productId?: string;
+  productData: Partial<Product>;
+  requestedBy: string;
+  timestamp: string;
+  status: 'PENDING' | 'APPROVED' | 'DECLINED';
+}

@@ -1,8 +1,5 @@
 {
-  "name": "EduStream AI",
-  "description": "A sophisticated educational video platform featuring course creation, AI-powered learning assistants, and a sleek Google-inspired dark theme.",
-  "requestFramePermissions": [
-    "camera",
-    "microphone"
-  ]
+  "name": "Copy of SuperMart Inventory Pro",
+  "description": "A comprehensive supermarket inventory management system featuring AI-powered insights, real-time stock tracking, and smart demand forecasting.",
+  "requestFramePermissions": []
 }
